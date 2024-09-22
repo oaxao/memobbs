@@ -747,7 +747,7 @@ async function getMemos(search) {
       if (!uLink.endsWith('/')) {
         uLink += '/';
       }
-      const fetchUrl = `${uLink}api/v1/memo?creatorId=${u.creatorId}&content=${search}&rowStatus=NORMAL&limit=${limit}`;
+      const fetchUrl = `${uLink}api/v1/memos?creatorId=${u.creatorId}&content=${search}&rowStatus=NORMAL&limit=${limit}`;
       return withTimeout(2000, fetch(fetchUrl)
         .then(response => {
           if (!response.ok) {
@@ -770,7 +770,7 @@ async function getMemos(search) {
         const filter = `creator=='users/${matchedMemo.creatorId}'&&visibilities==['PUBLIC']`
         fetchUrl = `${uLink}api/v1/memos?pageSize=${limit}&filter=${encodeURIComponent(filter)}`
       }else{
-        fetchUrl = `${uLink}api/v1/memo?creatorId=${u.creatorId}&rowStatus=NORMAL&limit=${limit}`;
+        fetchUrl = `${uLink}api/v1/memos?creatorId=${u.creatorId}&rowStatus=NORMAL&limit=${limit}`;
       }
 
       const response = await withTimeout(2000, fetch(fetchUrl));
@@ -1163,23 +1163,23 @@ async function getUserMemos(link,id,name,avatar,tag,search,mode,random) {
     };
     let userMemoUrl;
     if(tag && (random == null || random == "" )){
-      userMemoUrl = `${link}api/v1/memo?creatorId=${id}&tag=${tag}&rowStatus=NORMAL&limit=50`;
+      userMemoUrl = `${link}api/v1/memos?creatorId=${id}&tag=${tag}&rowStatus=NORMAL&limit=50`;
     }else if(search){
-      userMemoUrl = `${link}api/v1/memo?creatorId=${id}&content=${search}&rowStatus=NORMAL&limit=${limit}`;
+      userMemoUrl = `${link}api/v1/memos?creatorId=${id}&content=${search}&rowStatus=NORMAL&limit=${limit}`;
     }else if(mode == "NOPUBLIC"){
       userMemoUrl = `${link}api/v1/memo`;
     }else if(random){
       if(tag){
-        userMemoUrl = `${link}api/v1/memo?tag=${tag}&limit=1&offset=${random}`;
+        userMemoUrl = `${link}api/v1/memos?tag=${tag}&limit=1&offset=${random}`;
       }else{
-        userMemoUrl = `${link}api/v1/memo?&limit=1&offset=${random}`;
+        userMemoUrl = `${link}api/v1/memos?&limit=1&offset=${random}`;
       }
     }else{
       if (matchedV1) {
         const filter = `creator=='users/${id}'&&visibilities==['PUBLIC']`
         userMemoUrl = `${link}api/v1/memos?pageSize=50&filter=${encodeURIComponent(filter)}`
       }else{
-        userMemoUrl = `${link}api/v1/memo?creatorId=${id}&rowStatus=NORMAL&limit=50`;
+        userMemoUrl = `${link}api/v1/memos?creatorId=${id}&rowStatus=NORMAL&limit=50`;
       }
     }
 
@@ -1202,7 +1202,7 @@ async function getUserMemos(link,id,name,avatar,tag,search,mode,random) {
           let oneDayTagCount = window.localStorage && window.localStorage.getItem("memos-oneday-count");
           if( oneDayTag !== null && oneDayTagCount !== null && !search ){
             let randomOneNum = Math.floor(Math.random() * oneDayTagCount)
-            let oneDayUrl = `${link}api/v1/memo?tag=${oneDayTag}&limit=1&offset=${randomOneNum}`
+            let oneDayUrl = `${link}api/v1/memos?tag=${oneDayTag}&limit=1&offset=${randomOneNum}`
             //console.log(oneDayUrl)
             try {
               let responseOne = await fetch(oneDayUrl,{
@@ -1731,7 +1731,7 @@ function getEditIcon() {
     nowTagText = document.querySelector(".memos-tagnow-name") || ''
     if(nowTagText){
       nowTag = nowTagText.textContent;
-      userMemoUrl= `${nowLink}api/v1/memo?tag=${nowTag}`
+      userMemoUrl= `${nowLink}api/v1/memos?tag=${nowTag}`
     }else{
       userMemoUrl = `${nowLink}api/v1/memo/stats?creatorId=${nowId}`
     }
@@ -1773,7 +1773,7 @@ function getEditIcon() {
     if (oneDayNow == null ) {
       let nowTag = document.querySelector(".memos-tagnow-name").textContent
       let nowTagCount;
-      let nowTagUrl= `${nowLink}api/v1/memo?tag=${nowTag}`
+      let nowTagUrl= `${nowLink}api/v1/memos?tag=${nowTag}`
       try {
         let response = await fetch(nowTagUrl,{
             headers: {
@@ -2373,7 +2373,7 @@ async function sendToGemini(memosContent) {
 }
 
 async function getMemosForAI(){
-  let fetchUrl = `${nowLink}api/v1/memo?creatorId=${nowId}&limit=100`
+  let fetchUrl = `${nowLink}api/v1/memos?creatorId=${nowId}&limit=100`
   let response = await fetch(fetchUrl,{
     headers: {
       'Authorization': `Bearer ${memosOpenId}`,
